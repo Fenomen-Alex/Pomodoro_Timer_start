@@ -1,19 +1,18 @@
 import React, {useRef, useState} from 'react';
 import './App.css';
 
-const padTime = (time) => {
+const padTime = (time: number) => {
   return time.toString().padStart(2, '0')
 }
 
-export default function App() {
+export default function App(): JSX.Element {
 
   const [title, setTitle] = useState('Let the countdown begin!!!');
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const startTimer = () => {
-    if(intervalRef.current !== null) return;
+  const startTimer = (): void => {
     setTitle(`You're doing great!`);
     setIsRunning(true);
     intervalRef.current = setInterval(() => {
@@ -25,23 +24,23 @@ export default function App() {
     }, 1000);
   };
 
-  const stopTimer = () => {
+  const stopTimer = (): void => {
     if(intervalRef.current === null) return;
 
-    clearInterval(intervalRef.current);
+    clearInterval(+intervalRef.current);
     intervalRef.current = null;
     setTitle('Keep it up!');
     setIsRunning(false);
   };
 
-  const resetTimer = () => {
-    clearInterval(intervalRef.current);
+  const resetTimer = (): void => {
+    clearInterval(+intervalRef.current!);
     setTitle('Ready to go another round?');
     setTimeLeft(25 * 60);
     setIsRunning(false);
   };
 
-  const minutes = padTime(Math.floor(timeLeft / 60).toString().padStart(2, '0'));
+  const minutes = +padTime(+Math.floor(timeLeft / 60).toString().padStart(2, '0'));
   const seconds = padTime(timeLeft - minutes * 60).toString().padStart(2, '0');
 
   return (
